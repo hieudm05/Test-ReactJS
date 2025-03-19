@@ -27,10 +27,10 @@ class UserInfor extends React.Component {
             <div>
                 Tôi tên là {this.state.name} Tuổi {this.state.age}
                 <form onSubmit={(event) => { this.handleOnSumit(event) }} action="">
-                    <label for="">Họ và tên</label> <br />
+                    <label htmlFor="name">Họ và tên</label> <br />
                     <input type="text" onChange={(event) => { this.handleOnChangeInput(event) }} value={this.state.name} />
                     <br />
-                    <label for="">Tuổi</label> <br />
+                    <label htmlFor="age">Tuổi</label> <br />
                     <input type="text" onChange={(envet) => { this.handleOnChangeInputAge(envet) }} value={this.state.age} />
                     <button>submit</button>
                 </form>
