@@ -2,6 +2,23 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from 'react-router-dom';
+// import React, { useState } from 'react'
+// import {
+//   CCollapse,
+//   CContainer,
+//   CDropdown,
+//   CDropdownDivider,
+//   CDropdownItem,
+//   CDropdownMenu,
+//   CDropdownToggle,
+//   CNavbar,
+//   CNavbarBrand,
+//   CNavbarNav,
+//   CNavbarToggler,
+//   CNavItem,
+//   CNavLink,
+// } from '@coreui/react'
 
 const Header = () => {
   return (
@@ -11,9 +28,8 @@ const Header = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Users</Nav.Link>
-            <Nav.Link href="#link">Admin</Nav.Link>
+            <Link to="/users" className="nav-link">Users</Link>
+            <Link to="/admin" className="nav-link">Admin</Link>
           </Nav>
           <Nav>
           <NavDropdown title="Settings" id="basic-nav-dropdown">
@@ -31,3 +47,4 @@ const Header = () => {
 }
 
 export default Header;
+
