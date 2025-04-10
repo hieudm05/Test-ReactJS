@@ -9,8 +9,8 @@ import { Link, Outlet } from 'react-router-dom';
 const App = () => {
 
   return (
-    <div className="App">
-      <section className='bg-white'>
+    <div className="app-container">
+      <section className='header'>
         <Header/>
       </section>
       <section className=''>

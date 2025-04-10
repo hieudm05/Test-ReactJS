@@ -9,4 +9,33 @@ body {
   -moz-osx-font-smoothing: grayscale;
   // background-color: #f0f2f5;background: linear-gradient(180deg, #fbc2eb, #a6c1ee);
 }
+.app-container{
+  .header{
+    .navbar{
+      background-color: transparent !important;
+    }
+  }
+ .homepage-container{
+  .homepage-content{
+    position: relative;
+    // padding: 100px;
+    left: 0;
+    padding: 100px;
+    margin-top: 100px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+ }
+}
+video{
+  position: fixed;
+  bottom: 0;
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
 
