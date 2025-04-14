@@ -1,12 +1,20 @@
+import axios from "axios";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
 
-function ModalCreateUser() {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
+function ModalCreateUser(props) {
+  const { show, setShow } = props;
+  const handleClose = () => {
+    setShow(false);
+    setEmail("");
+    setPassword("");
+    setUsername("");
+    setRole("USER");
+    setImage("");
+    setPreviewImage("");
+  } 
   const handleShow = () => setShow(true);
 
   const [email, setEmail] = useState("");
@@ -23,15 +31,36 @@ function ModalCreateUser() {
     } else {
       //   setPreviewImage("");
     }
+
     // console.log("uploadfile nào", event.target.files[0]);
   };
+  const handSubmitCreateUser = async () => {
+    //Validate
 
+    //call api
+    // let data = {
+    //   email: email,
+    //   password: password,
+    //   username: username,
+    //   role: role,
+    //   userImage: image,
+    // }
+    // console.log("check data", data);
+
+    const data  = new FormData();
+    data.append("email", email);
+    data.append("password", password);
+    data.append("username", username);
+    data.append("role", role);
+    data.append("userImage", image);
+    const res = await axios.post("http://localhost:8081/api/v1/participant", data);
+    console.log("check res", res);
+  }
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      {/* <Button variant="primary" onClick={handleShow}>
         Launch demo modal
-      </Button>
-
+      </Button> */}
       <Modal
         show={show}
         onHide={handleClose}
@@ -108,7 +137,7 @@ function ModalCreateUser() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={() => handSubmitCreateUser()}>
             Save
           </Button>
         </Modal.Footer>
@@ -116,4 +145,5 @@ function ModalCreateUser() {
     </>
   );
 }
+
 export default ModalCreateUser;
