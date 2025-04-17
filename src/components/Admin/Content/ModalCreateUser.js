@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
+import {toast } from "react-toastify";
 
 function ModalCreateUser(props) {
   const { show, setShow } = props;
@@ -34,19 +35,26 @@ function ModalCreateUser(props) {
 
     // console.log("uploadfile nào", event.target.files[0]);
   };
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+  
   const handSubmitCreateUser = async () => {
     //Validate
-
+    const isValidateEmail = validateEmail(email);
+    if(!isValidateEmail){
+      toast.error("Email is invalid");
+      return
+    }
+    if(!password){
+      toast.error("Password is required")
+      return
+    }
     //call api
-    // let data = {
-    //   email: email,
-    //   password: password,
-    //   username: username,
-    //   role: role,
-    //   userImage: image,
-    // }
-    // console.log("check data", data);
-
     const data  = new FormData();
     data.append("email", email);
     data.append("password", password);
@@ -54,7 +62,16 @@ function ModalCreateUser(props) {
     data.append("role", role);
     data.append("userImage", image);
     const res = await axios.post("http://localhost:8081/api/v1/participant", data);
-    console.log("check res", res);
+    // console.log("check res", res.data);
+    // Tạo thành công
+    if(res.data && res.data.EC === 0){
+      toast.success(res.data.EM);
+      handleClose();
+    }
+    // Tạo thất bại 
+    if(res.data && res.data.EC !== 0){
+      toast.error(res.data.EM);
+    }
   }
   return (
     <>

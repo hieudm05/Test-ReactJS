@@ -3,7 +3,9 @@ import SideBar from "./SideBar";
 import { FaBars } from "react-icons/fa";
 import "./Admin.scss";
 import { Outlet } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
+import { Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Admin = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -24,8 +26,21 @@ const Admin = (props) => {
           </div>
           <section className="admin-main">
             <Outlet />
-            </section>
+          </section>
         </section>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
       </section>
     </>
   );
