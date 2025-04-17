@@ -1,13 +1,13 @@
-
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
-import {toast } from "react-toastify";
-import {postCreateNewUser} from "../../../services/apiServices";
+import { toast } from "react-toastify";
+import { postCreateNewUser } from "../../../services/apiServices";
 
 function ModalCreateUser(props) {
   const { show, setShow } = props;
+
   const handleClose = () => {
     setShow(false);
     setEmail("");
@@ -16,7 +16,7 @@ function ModalCreateUser(props) {
     setRole("USER");
     setImage("");
     setPreviewImage("");
-  } 
+  };
   const handleShow = () => setShow(true);
 
   const [email, setEmail] = useState("");
@@ -43,31 +43,39 @@ function ModalCreateUser(props) {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
   };
-  
+
   const handSubmitCreateUser = async () => {
     //Validate
     const isValidateEmail = validateEmail(email);
-    if(!isValidateEmail){
+    if (!isValidateEmail) {
       toast.error("Email is invalid");
-      return
+      return;
     }
-    if(!password){
-      toast.error("Password is required")
-      return
+    if (!password) {
+      toast.error("Password is required");
+      return;
     }
-   
-    const data = await postCreateNewUser(email, password, username, role, image);
+
+    const data = await postCreateNewUser(
+      email,
+      password,
+      username,
+      role,
+      image
+    );
     // console.log("check res", res.data);
     // Tạo thành công
-    if(data && data.EC === 0){
+    if (data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
+      // Sau khi đóng modal thì gọi lại hàm fetchListUser để cập nhật lại danh sách người dùng
+      await props.fetchListUser();
     }
-    // Tạo thất bại 
-    if(data && data.EC !== 0){
+    // Tạo thất bại
+    if (data && data.EC !== 0) {
       toast.error(data.EM);
     }
-  }
+  };
   return (
     <>
       {/* <Button variant="primary" onClick={handleShow}>
