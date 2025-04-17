@@ -9,5 +9,8 @@ const postCreateNewUser = async (email, password, username, role, image) => {
      data.append("userImage", image);
      return axios.post("api/v1/participant", data);
 }
+const getAllUser = () => {
+    return axios.get("api/v1/participant/all");
+}
 
-export { postCreateNewUser };
+export { postCreateNewUser, getAllUser };

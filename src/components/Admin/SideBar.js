@@ -56,7 +56,7 @@ const SideBar = (props) => {
         <Menu iconShape="circle">
           <SubMenu
             suffix={<span className="badge yellow">3</span>}
-            WithSuffix
+            // WithSuffix
             icon={<FaGem />}
             title="Features"
           >
