@@ -1,5 +1,6 @@
 import ModalCreateUser from "./ModalCreateUser";
 import ModalUpdateUser from "./ModalUpdateUser";
+import ShowUserDetail from "./ModalShowUser";
 import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
 import TableUser from "./TableUser";
@@ -24,12 +25,19 @@ const MagageUser = () => {
     setDataUpdate(user);
     // console.log("user", user);
   }
+  const handleCLickShowUser = (user) =>{
+    console.log("check data", user);
+    
+    setShowModalShowUser(true);
+    setDataUpdate(user);
+  }
   // Sau khi mà ấn vào update mà không có thay đổi, thì phải trả về object rỗng thay vì 1 giá trị rỗng
   const resetUpdateUser = () => {
     setDataUpdate({});
   }
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
   const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
+  const [showModalShowUser, setShowModalShowUser] = useState(false);
   const [dataUpdate, setDataUpdate] = useState({});
   return (
     <div className="manage-user-container">
@@ -46,7 +54,7 @@ const MagageUser = () => {
         </button>
       </div>
       <div className="table-users-container">
-        <TableUser listUser={listUser} handleClickUpdateUser={handleClickUpdateUser} />
+        <TableUser listUser={listUser} handleClickUpdateUser={handleClickUpdateUser} handleClickShowUser={handleCLickShowUser} />
       </div>
       <ModalCreateUser
         show={showModalCreateUser}
@@ -60,6 +68,12 @@ const MagageUser = () => {
         fetchListUser={fetchListUser}
         resetUpdateUser={resetUpdateUser}
       />
+      <ShowUserDetail
+        show={showModalShowUser}
+        setShow={setShowModalShowUser}
+        dataUpdate={dataUpdate}
+      />
+
     </div>
   );
 };
