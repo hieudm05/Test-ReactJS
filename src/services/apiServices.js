@@ -1,5 +1,5 @@
 import axios from "../utils/axiosCustomize";
-const postCreateNewUser = async (email, password, username, role, image) => {
+const postCreateNewUser = (email, password, username, role, image) => {
      //call api
      const data  = new FormData();
      data.append("email", email);
@@ -12,5 +12,14 @@ const postCreateNewUser = async (email, password, username, role, image) => {
 const getAllUser = () => {
     return axios.get("api/v1/participant/all");
 }
+const putUpdateUser =  (id, username, role, image) => {
+    //call api
+    const data  = new FormData();
+    data.append("id", id);
+    data.append("username", username);
+    data.append("role", role);
+    data.append("userImage", image);
+    return axios.put(`api/v1/participant`, data);
+}
 
-export { postCreateNewUser, getAllUser };
+export { postCreateNewUser, getAllUser,putUpdateUser };

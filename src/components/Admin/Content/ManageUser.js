@@ -23,7 +23,10 @@ const MagageUser = () => {
     setShowModalUpdateUser(true);
     setDataUpdate(user);
     // console.log("user", user);
-    
+  }
+  // Sau khi mà ấn vào update mà không có thay đổi, thì phải trả về object rỗng thay vì 1 giá trị rỗng
+  const resetUpdateUser = () => {
+    setDataUpdate({});
   }
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
   const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
@@ -54,6 +57,8 @@ const MagageUser = () => {
         show={showModalUpdateUser}
         setShow={setShowModalUpdateUser}
         dataUpdate={dataUpdate}
+        fetchListUser={fetchListUser}
+        resetUpdateUser={resetUpdateUser}
       />
     </div>
   );
