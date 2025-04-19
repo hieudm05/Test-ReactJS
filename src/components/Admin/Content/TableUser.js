@@ -1,4 +1,3 @@
-
 const TableUser = (props) => {
   const { listUser } = props;
   return (
@@ -25,15 +24,20 @@ const TableUser = (props) => {
                   <td>{item.role}</td>
                   <td>
                     <button className="btn btn-secondary mx-2">View</button>
-                    <button className="btn btn-warning mx-2">Edit</button>
-                    <button className="btn btn-danger">Delete</button>  
+                    <button
+                      className="btn btn-warning mx-2"
+                      onClick={() => props.handleClickUpdateUser(item)}
+                    >
+                      Edit
+                    </button>
+                    <button className="btn btn-danger">Delete</button>
                   </td>
                 </tr>
               );
             })}
           {listUser && listUser.length === 0 && (
             <tr>
-              <td colSpan="4" className="text-center text-muted">
+              <td colSpan="5" className="text-center text-muted">
                 Not found data
               </td>
             </tr>

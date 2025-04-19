@@ -3,7 +3,7 @@ import SideBar from "./SideBar";
 import { FaBars } from "react-icons/fa";
 import "./Admin.scss";
 import { Outlet } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer} from "react-toastify";
 import { Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

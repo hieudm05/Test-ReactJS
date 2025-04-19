@@ -1,4 +1,5 @@
 import ModalCreateUser from "./ModalCreateUser";
+import ModalUpdateUser from "./ModalUpdateUser";
 import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
 import TableUser from "./TableUser";
@@ -18,7 +19,15 @@ const MagageUser = () => {
       setListUser(res.DT);
     }
   };
+  const handleClickUpdateUser = (user) => {
+    setShowModalUpdateUser(true);
+    setDataUpdate(user);
+    // console.log("user", user);
+    
+  }
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
+  const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState({});
   return (
     <div className="manage-user-container">
       <div className="title">
@@ -34,12 +43,17 @@ const MagageUser = () => {
         </button>
       </div>
       <div className="table-users-container">
-        <TableUser listUser={listUser} />
+        <TableUser listUser={listUser} handleClickUpdateUser={handleClickUpdateUser} />
       </div>
       <ModalCreateUser
         show={showModalCreateUser}
         setShow={setShowModalCreateUser}
         fetchListUser={fetchListUser}
+      />
+      <ModalUpdateUser
+        show={showModalUpdateUser}
+        setShow={setShowModalUpdateUser}
+        dataUpdate={dataUpdate}
       />
     </div>
   );
