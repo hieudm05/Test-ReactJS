@@ -26,10 +26,10 @@ const MagageUser = () => {
     // console.log("user", user);
   }
   const handleCLickShowUser = (user) =>{
-    console.log("check data", user);
-    
+    // console.log("check data", user);
     setShowModalShowUser(true);
     setDataUpdate(user);
+
   }
   // Sau khi mà ấn vào update mà không có thay đổi, thì phải trả về object rỗng thay vì 1 giá trị rỗng
   const resetUpdateUser = () => {
@@ -72,6 +72,7 @@ const MagageUser = () => {
         show={showModalShowUser}
         setShow={setShowModalShowUser}
         dataUpdate={dataUpdate}
+        resetUpdateUser={resetUpdateUser}
       />
 
     </div>

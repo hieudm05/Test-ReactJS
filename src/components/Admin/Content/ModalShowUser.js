@@ -14,6 +14,7 @@ const ShowUserDetail = (props) => {
         setRole("USER");
         setImage("");
         setPreviewImage("");
+        props.resetUpdateUser();
     }
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
