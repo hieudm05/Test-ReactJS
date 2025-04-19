@@ -4,13 +4,24 @@ import ShowUserDetail from "./ModalShowUser";
 import DeleteUser from "./ModalDeleteUser";
 import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
-import TableUser from "./TableUser";
+// import TableUser from "./TableUser";
 import React, { useEffect, useState } from "react";
-import { getAllUser } from "../../../services/apiServices";
+import { getAllUser,getUserWithPaginate } from "../../../services/apiServices";
+import TableUserPaginate from "./TableUserPaginate";
 
-const MagageUser = () => {
+const MagageUser = (props) => {
+  const LIMIT_USER = 6;
+  const [pageCount, setPageCount] = useState(0);
+  const [showModalCreateUser, setShowModalCreateUser] = useState(false);
+  const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
+  const [showModalShowUser, setShowModalShowUser] = useState(false);
+  const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState({});
+  const [dataDelete, setDataDelete] = useState({});
+  const [listUser, setListUser] = useState([]);
   useEffect(() => {
-    fetchListUser();
+    // fetchListUser();
+    fetchListUserWithPaginate(1);
   }, []);
   const fetchListUser = async () => {
     let res = await getAllUser();
@@ -18,6 +29,15 @@ const MagageUser = () => {
     // EC = 0 là trạng thái có dữ liệu
     if (res.EC === 0) {
       setListUser(res.DT);
+    }
+  };
+  const fetchListUserWithPaginate = async (page) => {
+    let res = await getUserWithPaginate(page, LIMIT_USER);
+    console.log("check res", res.DT);
+    // EC = 0 là trạng thái có dữ liệu
+    if (res.EC === 0) {
+      setListUser(res.DT.users);
+      setPageCount(res.DT.totalPages);
     }
   };
   const handleClickUpdateUser = (user) => {
@@ -39,13 +59,7 @@ const MagageUser = () => {
   const resetUpdateUser = () => {
     setDataUpdate({});
   };
-  const [showModalCreateUser, setShowModalCreateUser] = useState(false);
-  const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
-  const [showModalShowUser, setShowModalShowUser] = useState(false);
-  const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
-  const [dataUpdate, setDataUpdate] = useState({});
-  const [dataDelete, setDataDelete] = useState({});
-  const [listUser, setListUser] = useState([]);
+
   return (
     <div className="manage-user-container">
       <div className="title">
@@ -61,11 +75,19 @@ const MagageUser = () => {
         </button>
       </div>
       <div className="table-users-container">
-        <TableUser
+        {/* <TableUser
           listUser={listUser}
           handleClickUpdateUser={handleClickUpdateUser}
           handleClickShowUser={handleCLickShowUser}
           handleClickDeleteUser={handleClickDeleteUser}
+        /> */}
+        <TableUserPaginate
+          listUser={listUser}
+          handleClickUpdateUser={handleClickUpdateUser}
+          handleClickShowUser={handleCLickShowUser}
+          handleClickDeleteUser={handleClickDeleteUser}
+          fetchListUserWithPaginate={fetchListUserWithPaginate}
+          pageCount={pageCount}
         />
       </div>
       <ModalCreateUser
@@ -86,13 +108,12 @@ const MagageUser = () => {
         dataUpdate={dataUpdate}
         resetUpdateUser={resetUpdateUser}
       />
-      <DeleteUser 
+      <DeleteUser
         show={showModalDeleteUser}
         setShow={setShowModalDeleteUser}
         dataDelete={dataDelete}
         fetchListUser={fetchListUser}
-
-        />
+      />
     </div>
   );
 };
