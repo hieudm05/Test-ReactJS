@@ -10,7 +10,8 @@ import { getAllUser,getUserWithPaginate } from "../../../services/apiServices";
 import TableUserPaginate from "./TableUserPaginate";
 
 const MagageUser = (props) => {
-  const LIMIT_USER = 6;
+  const LIMIT_USER = 1;
+  const [curentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
   const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
@@ -88,12 +89,17 @@ const MagageUser = (props) => {
           handleClickDeleteUser={handleClickDeleteUser}
           fetchListUserWithPaginate={fetchListUserWithPaginate}
           pageCount={pageCount}
+          curentPage={curentPage}
+          setCurrentPage={setCurrentPage}
         />
       </div>
       <ModalCreateUser
         show={showModalCreateUser}
         setShow={setShowModalCreateUser}
         fetchListUser={fetchListUser}
+        fetchListUserWithPaginate={fetchListUserWithPaginate}
+        curentPage={curentPage}
+        setCurrentPage={setCurrentPage}
       />
       <ModalUpdateUser
         show={showModalUpdateUser}
@@ -101,6 +107,10 @@ const MagageUser = (props) => {
         dataUpdate={dataUpdate}
         fetchListUser={fetchListUser}
         resetUpdateUser={resetUpdateUser}
+        fetchListUserWithPaginate={fetchListUserWithPaginate}
+        curentPage={curentPage}
+        setCurrentPage={setCurrentPage}
+
       />
       <ShowUserDetail
         show={showModalShowUser}
@@ -113,6 +123,9 @@ const MagageUser = (props) => {
         setShow={setShowModalDeleteUser}
         dataDelete={dataDelete}
         fetchListUser={fetchListUser}
+        fetchListUserWithPaginate={fetchListUserWithPaginate}
+        curentPage={curentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   );

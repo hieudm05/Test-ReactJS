@@ -13,9 +13,12 @@ const DeleteUser = (props) => {
     if(data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
-      await props.fetchListUser();
+      // await props.fetchListUser();
+      // Sau khi xoá sẽ set nó về trang 1
+      props.setCurrentPage(1);
+      await props.fetchListUserWithPaginate(1);
     }
-    if(data && data.EC !== 0) {
+    if(data && data.EC !== 0) { 
       toast.error(data.EM);
     }
   }
