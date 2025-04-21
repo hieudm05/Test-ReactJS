@@ -2,6 +2,18 @@
     .header{
         height: 45px;
         text-align: right;
+        padding: 5px 100px 0 100px;
+        button{
+            border: none;
+            padding: 3px 15px;
+            margin-left: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid;
+            &:hover{
+                background-color: white;
+            }
+        }
     }
     .title{
         font-size: 25px;
@@ -27,6 +39,9 @@
             border-radius: 5px;
             color: white;
             background-color: black;
+        }
+        .back{
+            cursor: pointer;
         }
     }
 }
