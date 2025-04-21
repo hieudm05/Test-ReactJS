@@ -29,7 +29,7 @@ const Login = (props) => {
       <section className="header">
         <span className="">Don't have an account yet?</span>
         <span className="sign-up">
-          <button>Sign up</button>
+          <button onClick={() => navigate("/register")}>Sign up</button>
         </span>
       </section>
       <section className="title col-4 mx-auto"> Minh Hieu</section>
