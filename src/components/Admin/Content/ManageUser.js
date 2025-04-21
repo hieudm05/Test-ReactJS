@@ -10,7 +10,7 @@ import { getAllUser,getUserWithPaginate } from "../../../services/apiServices";
 import TableUserPaginate from "./TableUserPaginate";
 
 const MagageUser = (props) => {
-  const LIMIT_USER = 1;
+  const LIMIT_USER = 5;
   const [curentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
@@ -34,7 +34,6 @@ const MagageUser = (props) => {
   };
   const fetchListUserWithPaginate = async (page) => {
     let res = await getUserWithPaginate(page, LIMIT_USER);
-    console.log("check res", res.DT);
     // EC = 0 là trạng thái có dữ liệu
     if (res.EC === 0) {
       setListUser(res.DT.users);
@@ -54,7 +53,7 @@ const MagageUser = (props) => {
   const handleClickDeleteUser = (user) => {
     setShowModalDeleteUser(true);
     setDataDelete(user);
-    // showModalDeleteUser(true);
+    //showModalDeleteUser(true);
   };
   // Sau khi mà ấn vào update mà không có thay đổi, thì phải trả về object rỗng thay vì 1 giá trị rỗng
   const resetUpdateUser = () => {

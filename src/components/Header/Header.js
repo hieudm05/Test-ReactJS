@@ -2,7 +2,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+
 // import React, { useState } from 'react'
 // import {
 //   CCollapse,
@@ -21,6 +22,10 @@ import { NavLink } from 'react-router-dom';
 // } from '@coreui/react'
 
 const Header = () => {
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate('/login');
+  }
   return (
     <Navbar expand="lg" className="bg-body-tertiary z-2 pt-4">
       <Container>
@@ -34,7 +39,7 @@ const Header = () => {
             <NavLink to="/admin" className="nav-link">Admin</NavLink>
           </Nav>
           <Nav className=''>
-          <button className='btn btn-outline-dark px-3' style={{height: '40px'}}>Log in</button>
+          <button className='btn btn-outline-dark px-3' style={{height: '40px'}} onClick={() => handleLogin()} >Log in</button>
           <button className='btn btn-dark px-3 ms-3'>Sign up</button>
           {/* <NavDropdown title="Settings" id="basic-nav-dropdown">
               <NavDropdown.Item>Logim</NavDropdown.Item>

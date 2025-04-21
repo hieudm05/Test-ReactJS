@@ -69,7 +69,8 @@ function ModalCreateUser(props) {
       toast.success(data.EM);
       handleClose();
       // Sau khi đóng modal thì gọi lại hàm fetchListUser để cập nhật lại danh sách người dùng
-      await props.fetchListUser();
+      props.setCurrentPage(1);
+      await props.fetchListUserWithPaginate(1);
     }
     // Tạo thất bại
     if (data && data.EC !== 0) {

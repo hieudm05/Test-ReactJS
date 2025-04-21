@@ -77,8 +77,13 @@ function ModalUpdateUser(props) {
     if (data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
-      // Sau khi đóng modal thì gọi lại hàm fetchListUser để cập nhật lại danh sách người dùng
-      await props.fetchListUser();
+      // Sau khi đóng modal thì gọi lại hàm fetchListUserWithPaginate để cập nhật lại danh sách người dùng
+      // props.setCurrentPage(1);
+      //Trong các trường hợp trên sau khi xử lí dữ liệu sẽ load về trang 1, 
+      //Còn update thì nó không cần thiết, nó sẽ load về trang hiện tại mà nó được sửa
+      
+      await props.fetchListUserWithPaginate(props.curentPage);
+      console.log("props.currentPage", props.curentPage);
     }
     // Tạo thất bại
     if (data && data.EC !== 0) {
