@@ -5,6 +5,7 @@ import { postLogin } from "../../services/apiServices";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { doLogin } from "../../redux/action/userAction";
+import { ImSpinner10 } from "react-icons/im";
 
 
 const Login = (props) => {
@@ -12,9 +13,10 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const handleLogin = async () => {
     //Validate email and password
-
+    setLoading(true);
     //Submit
     let data = await postLogin(email, password);
     if (data && data.EC === 0) {
@@ -23,11 +25,13 @@ const Login = (props) => {
         doLogin(data.DT)
       )
       toast.success(data.EM);
+      setLoading(false);
       navigate("/");
     }
     if (data && data.EC !== 0) {
       //Login fail
       toast.error(data.EM);
+      setLoading(false);
     }
   };
   return (
@@ -63,8 +67,11 @@ const Login = (props) => {
         </div>
         <span className="forgot-password">Forgot password?</span>
         <div>
-          <button className="btn-submit" onClick={() => handleLogin()}>
+          <button className="btn-submit" onClick={() => handleLogin()} disabled = {loading}>
             Login
+            {loading === true &&
+               <ImSpinner10 className="loaderIcon" />
+            }
           </button>
         </div>
         <div className="text-center">
@@ -77,3 +84,4 @@ const Login = (props) => {
   );
 };
 export default Login;
+
