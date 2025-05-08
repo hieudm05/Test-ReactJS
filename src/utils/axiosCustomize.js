@@ -1,5 +1,6 @@
 import axios from 'axios';
 import nProgress from 'nprogress';
+import { store } from '../redux/store';
 nProgress.configure({ showSpinner: false, trickleSpeed: 100 });
 const instance = axios.create({
     baseURL: 'http://localhost:8081/',
@@ -11,6 +12,9 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent
+    // console.log('check store', store.getState());
+    const access_token = store?.getState()?.user?.account?.access_token;
+    config.headers["Authorization"] = `Bearer ${access_token}`;
     nProgress.start();
     return config;
   }, function (error) {

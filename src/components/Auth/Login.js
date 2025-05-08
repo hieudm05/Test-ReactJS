@@ -22,7 +22,7 @@ const Login = (props) => {
     if (data && data.EC === 0) {
       //Login success
       dispatch(
-        doLogin(data.DT)
+        doLogin(data)
       )
       toast.success(data.EM);
       setLoading(false);
