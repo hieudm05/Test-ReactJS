@@ -1,6 +1,6 @@
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Router, Routes,useParams } from "react-router-dom";
 import App from './App';
-import Users from './components/User/User';
+// import Users from './components/User/User';
 import Admin from './components/Admin/Admin';
 import HomePage from './components/Home/HomePage';
 import MagageUser from './components/Admin/Content/ManageUser';
@@ -10,17 +10,25 @@ import { ToastContainer } from "react-toastify";
 import { Bounce } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Register from "./components/Auth/Register";
+import DetailQuiz from "./components/User/DetailQuiz";
 import ListQuiz from "./components/User/ListQuiz";
 
-
+const NotFound = () => {
+ return(
+  <div className=" container mt-3 alert alert-danger">
+    404.Not found data with your current URL
+  </div>
+ )
+}
 const Layout = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="/users" element={<ListQuiz />} />
+          <Route path="users" element={<ListQuiz />} />
         </Route>
+        <Route path="/quiz/:id" element={<DetailQuiz />} />
         {/* Router Admin */}
         <Route path="/admin" element={<Admin />}>
           <Route index element={<DashBoard />} />
@@ -28,6 +36,7 @@ const Layout = () => {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
+        <Route path="*"  element={<NotFound/>} />
       </Routes>
 
 
