@@ -22,7 +22,6 @@ const ListQuiz = (props) => {
         arrQuiz.length > 0 &&
         arrQuiz.map((quiz, index) => (
           // console.log(quiz);
-
           <div
             key={`${index}-quiz`}
             className="card"
