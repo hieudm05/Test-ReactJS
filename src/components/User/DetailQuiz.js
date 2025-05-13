@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, data } from "react-router-dom";
-import { getDataQuiz } from "../../services/apiServices";
+import { getDataQuiz,postSubmitQuiz } from "../../services/apiServices";
 import _ from "lodash";
 import "./DetailQuiz.scss";
 import Question from "./Question";
+import ModalResult from "./ModalResult";
 const DetailQuiz = (props) => {
   const params = useParams();
   const location = useLocation();
   const [dataQuiz, setDataQuiz] = useState([]);
   // Kiểm soát phân trang
   const [index, setIndex] = useState(0);
-  // console.log(location);
-  // console.log('Checkl pram',params);
+  const [isShowModalResult, setIsShowModalResult] = useState(false)
+  const [dataModalResult, setDataModalResult ] = useState({})
   const quizId = params.id;
   useEffect(() => {
     fetchQuestions();
   }, [quizId]);
-  
+
   const fetchQuestions = async () => {
     const res = await getDataQuiz(quizId);
     
@@ -78,7 +79,6 @@ const DetailQuiz = (props) => {
       // console.log(question);
       // Gán đè lại dữ liệu mới về question
       question.answers = b
-      // console.log("b", b);
     }
     let index = dataQuizClone.findIndex(item => +item.questionId === +questionId )
     if(index > -1){
@@ -87,27 +87,10 @@ const DetailQuiz = (props) => {
       setDataQuiz(dataQuizClone);
     }
   }
-    const handleFinishQuiz = () =>{
-      console.log("check data before submit", dataQuiz);
-//       {
-//     "quizId": 1,
-//     "answers": [
-//         { 
-//             "questionId": 1,
-//             "userAnswerId": [3]
-//         },
-//         { 
-//             "questionId": 2,
-//             "userAnswerId": [6]
-//         }
-//     ]
-// }
+    const handleFinishQuiz = async () =>{
       let payload = {
         quizId: +quizId,
-        answers: [
-
-        ]
-
+        answers: []
       };
       let answersArr = []
       if(dataQuiz && dataQuiz.length > 0){
@@ -126,7 +109,21 @@ const DetailQuiz = (props) => {
             userAnswerId: userAnswerId
           })
         })
-        payload.answers = answersArr
+        payload.answers = answersArr;
+        // Submit api
+        let res = await postSubmitQuiz(payload)
+        console.log('check res: ',res);
+        if(res && res.EC ===0){
+          setDataModalResult({
+            countCorrect: res.DT.countCorrect,
+            countTotal: res.DT.countTotal,
+            quizData: res.DT.quizData
+          })
+          setIsShowModalResult(true)
+        }else{
+          alert("lỗi");
+        }
+        
         console.log("final payload", payload);
         
       }
@@ -156,6 +153,11 @@ const DetailQuiz = (props) => {
         </div>
       </section>
       <section className="right-content">count down</section>
+      <ModalResult 
+      show = {isShowModalResult}
+      setShow = {setIsShowModalResult}
+      dataModalResult={dataModalResult}
+      />
     </div>
   );
 };
