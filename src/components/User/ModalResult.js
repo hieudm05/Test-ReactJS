@@ -30,7 +30,7 @@ const ModalResult = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </> 
   );
 };
 
