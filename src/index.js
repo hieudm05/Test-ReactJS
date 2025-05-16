@@ -8,6 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import "nprogress/nprogress.css";
 import Layout from "./Layout";
 import { PersistGate } from "redux-persist/integration/react";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 // import './index.css';
 

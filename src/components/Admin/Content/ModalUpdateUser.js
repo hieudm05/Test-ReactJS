@@ -83,7 +83,7 @@ function ModalUpdateUser(props) {
       //Còn update thì nó không cần thiết, nó sẽ load về trang hiện tại mà nó được sửa
       
       await props.fetchListUserWithPaginate(props.curentPage);
-      console.log("props.currentPage", props.curentPage);
+      // console.log("props.currentPage", props.curentPage);
     }
     // Tạo thất bại
     if (data && data.EC !== 0) {

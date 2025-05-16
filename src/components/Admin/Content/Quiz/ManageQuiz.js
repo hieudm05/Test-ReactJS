@@ -1,10 +1,13 @@
 import Select from "react-select";
 import "./ManageQuiz.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { postCreateNewQuiz } from "../../../../services/apiServices";
 import { toast } from "react-toastify";
 import TableQuiz from "./TableQuiz";
 import Accordion from "react-bootstrap/Accordion";
+import { getAllQuizForAdmin } from "../../../../services/apiServices";
+import ModalEditQuiz from "./ModalEditQuiz";
+import ModalDelete from "./ModalDelete";
 
 const options = [
   { value: "Easy", label: "Easy" },
@@ -12,6 +15,21 @@ const options = [
   { value: "Hard", label: "Hard" },
 ];
 const MagageQuiz = (props) => {
+  const [listQuiz, setListQuiz] = useState([]);
+  useEffect(() => {
+    fetchQuiz();
+  }, []);
+  const fetchQuiz = async () => {
+    let res = await getAllQuizForAdmin();
+    // console.log("res all quiz", res);
+    if (res && res.EC === 0) {
+      setListQuiz(res.DT);
+    }
+  };
+  const [showModalUpdateQuiz, setShowModalUpdateQuiz] = useState(false);
+  const [showModalDeleteQuiz, setShowModalDeleteQuiz] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState({});
+  const [dataDelete, setDataDelete] = useState({});
   const [name, setName] = useState("");
   const [description, setDecription] = useState("");
   const [type, setType] = useState("");
@@ -32,15 +50,25 @@ const MagageQuiz = (props) => {
       return;
     }
     let res = await postCreateNewQuiz(description, name, type?.value, image);
-    console.log("log res", res);
+    // console.log("log res", res);
     if (res && res.EC === 0) {
       toast.success(res.EM);
       setName("");
       setDecription("");
       setImage(null);
+      // Sau khi thêm xong, tăng key để Table load lại
+      fetchQuiz();
     } else {
       toast.error(res.EM);
     }
+  };
+  const handleClickUpdateQuiz = (item) => {
+    setShowModalUpdateQuiz(true);
+    setDataUpdate(item);
+  };
+  const handleClickDeleteQuiz = (item) => {
+    setShowModalDeleteQuiz(true);
+    setDataDelete(item);
   };
   return (
     <div className="quiz-contaier">
@@ -105,8 +133,24 @@ const MagageQuiz = (props) => {
         </Accordion.Item>
       </Accordion>
       <div className="list-detail">
-        <TableQuiz />
+        <TableQuiz
+          listQuiz={listQuiz}
+          handleClickUpdateQuiz={handleClickUpdateQuiz}
+          handleClickDeleteQuiz={handleClickDeleteQuiz}
+        />
       </div>
+      <ModalEditQuiz
+        dataUpdate={dataUpdate}
+        show={showModalUpdateQuiz}
+        setShow={setShowModalUpdateQuiz}
+        fetchQuiz={fetchQuiz}
+      />
+      <ModalDelete
+        show={showModalDeleteQuiz}
+        setShow={setShowModalDeleteQuiz}
+        dataDelete={dataDelete}
+        fetchQuiz={fetchQuiz}
+      />
     </div>
   );
 };
