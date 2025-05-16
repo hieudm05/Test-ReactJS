@@ -13,6 +13,7 @@ import Register from "./components/Auth/Register";
 import DetailQuiz from "./components/User/DetailQuiz";
 import ListQuiz from "./components/User/ListQuiz";
 import MagageQuiz from "./components/Admin/Content/Quiz/ManageQuiz";
+import Questions from "./components/Admin/Content/Question/Questions";
 
 const NotFound = () => {
  return(
@@ -35,6 +36,7 @@ const Layout = () => {
           <Route index element={<DashBoard />} />
           <Route path="manage-users" element={<MagageUser />} />
           <Route path="manage-quiz" element={<MagageQuiz />} />
+          <Route path="manage-questions" element={<Questions />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
