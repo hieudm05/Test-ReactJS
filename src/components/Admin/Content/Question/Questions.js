@@ -1,22 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
-import { BsFillPatchPlusFill } from "react-icons/bs";
+import { BsCursor, BsFillPatchPlusFill } from "react-icons/bs";
 import { BsFillPatchMinusFill } from "react-icons/bs";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import { RiImageAddLine } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
-import { getAllQuizForAdmin } from "../../../../services/apiServices";
+import "react-awesome-lightbox/build/style.css";
+// import { getAllQuizForAdmin } from "../../../../services/apiServices";
 import _ from "lodash";
 import "./Questions.scss";
+import Lightbox from "react-awesome-lightbox";
 
 const Questions = (props) => {
+  const [isPrevewImage, setIsPreViewImage] = useState(false);
+  const [previewImage, setPreviewImage] = useState({
+    title: "",
+    url: "",
+  });
+  useEffect(() => {
+    return () => {
+        if (previewImage.url.length > 0) {
+          URL.revokeObjectURL(previewImage.url);
+        }
+        console.log("xoá xoá");
+    };
+  }, [isPrevewImage]);
   const options = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
     { value: "vanilla", label: "Vanilla" },
   ];
-  const [selectedQuiz, setSelectedQuiz] = useState({});
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [questions, setQuestions] = useState([
     {
       id: uuidv4(),
@@ -108,7 +123,7 @@ const Questions = (props) => {
   };
   const handleAnswerQuestion = (type, answerId, questionId, value) => {
     let questionClone = _.cloneDeep(questions);
-    let index = questionClone.findIndex((item) => (item.id = questionId));
+    let index = questionClone.findIndex((item) => item.id === questionId);
     if (index > -1) {
       questionClone[index].answers = questionClone[index].answers.map(
         // eslint-disable-next-line array-callback-return
@@ -124,13 +139,23 @@ const Questions = (props) => {
           return answer;
         }
       );
-      setQuestions(questionClone)
+      setQuestions(questionClone);
     }
   };
   const handleSubmitQuestionForQuiz = () => {
     console.log("check question", questions);
-  }
-  // 
+  };
+  const handlePreviewImage = (questionId) => {
+    let questionClone = _.cloneDeep(questions);
+    let index = questionClone.findIndex((item) => item.id === questionId);
+    if (index > -1) {
+      setPreviewImage({
+        title: questionClone[index].imageName,
+        url: URL.createObjectURL(questionClone[index].imageFile),
+      });
+      setIsPreViewImage(true);
+    }
+  };
 
   return (
     <div className="question-container">
@@ -149,7 +174,7 @@ const Questions = (props) => {
         {questions &&
           questions.length > 0 &&
           questions?.map((question, index) => (
-            <section className="q-main mb-4">
+            <section key={question.id} className="q-main mb-4">
               <div className="questions-content">
                 <div key={question.id} className="form-floating descripsion">
                   <input
@@ -181,10 +206,17 @@ const Questions = (props) => {
                       handleOnChangeFielQuestion(question.id, event)
                     }
                   />
-                  <span>
-                    {question.imageName && question.imageName.length > 0
-                      ? question.imageName
-                      : "0 file is uploaded"}
+                  <span className="">
+                    {question.imageName && question.imageName.length > 0 ? (
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handlePreviewImage(question.id)}
+                      >
+                        {question.imageName}{" "}
+                      </span>
+                    ) : (
+                      "0 file is uploaded"
+                    )}
                   </span>
                 </div>
                 <div className="btn-add">
@@ -263,13 +295,26 @@ const Questions = (props) => {
                 ))}
             </section>
           ))}
-          {
-            questions && questions.length > 0 && 
-            <div>
-              <button className="btn btn-warning" onClick={() => handleSubmitQuestionForQuiz()}>Save Questions</button>
-            </div>
-          }
+        {questions && questions.length > 0 && (
+          <div>
+            <button
+              className="btn btn-warning"
+              onClick={() => handleSubmitQuestionForQuiz()}
+            >
+              Save Questions
+            </button>
+          </div>
+        )}
       </div>
+      {isPrevewImage === true && (
+        <Lightbox
+          image={previewImage.url}
+          title={previewImage.title}
+          onClose={() => {
+            setIsPreViewImage(false);
+          }}
+        ></Lightbox>
+      )}
     </div>
   );
 };
