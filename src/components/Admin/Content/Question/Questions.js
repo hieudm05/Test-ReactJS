@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import Select from "react-select";
-import { BsCursor, BsFillPatchPlusFill } from "react-icons/bs";
+import { BsFillPatchPlusFill } from "react-icons/bs";
 import { BsFillPatchMinusFill } from "react-icons/bs";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import { RiImageAddLine } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
 import "react-awesome-lightbox/build/style.css";
-// import { getAllQuizForAdmin } from "../../../../services/apiServices";
+import {
+  getAllQuizForAdmin,
+  postCreateNewQuestionForQuiz,
+  postCreateNewAnswerForQuestion,
+} from "../../../../services/apiServices";
 import _ from "lodash";
 import "./Questions.scss";
 import Lightbox from "react-awesome-lightbox";
@@ -18,19 +22,31 @@ const Questions = (props) => {
     title: "",
     url: "",
   });
+  const [listQuiz, setListQuiz] = useState([]);
   useEffect(() => {
+    fetchQuiz();
     return () => {
-        if (previewImage.url.length > 0) {
-          URL.revokeObjectURL(previewImage.url);
-        }
-        console.log("xoá xoá");
+      if (previewImage.url.length > 0) {
+        URL.revokeObjectURL(previewImage.url);
+      }
     };
   }, [isPrevewImage]);
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+  const fetchQuiz = async () => {
+    let res = await getAllQuizForAdmin();
+    // console.log("res all quiz", res);
+    if (res && res.EC === 0) {
+      let newQuiz = res.DT.map((item) => ({
+        value: item.id,
+        label: `${item.id}-${item.name}`,
+      }));
+      setListQuiz(newQuiz);
+    }
+  };
+  // const options = [
+  //   { value: "chocolate", label: "Chocolate" },
+  //   { value: "strawberry", label: "Strawberry" },
+  //   { value: "vanilla", label: "Vanilla" },
+  // ];
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [questions, setQuestions] = useState([
     {
@@ -142,8 +158,32 @@ const Questions = (props) => {
       setQuestions(questionClone);
     }
   };
-  const handleSubmitQuestionForQuiz = () => {
-    console.log("check question", questions);
+  const handleSubmitQuestionForQuiz = async () => {
+    // Todo
+    // Validate
+    // console.log("check question", questions, "___", selectedQuiz);
+    // postCreateNewQuestionForQuiz,postCreateNewAnswerForQuestion
+    // Submit question
+    await Promise.all(
+      questions.map(async (question) => {
+        const q = await postCreateNewQuestionForQuiz(
+          +selectedQuiz.value,
+          question.description,
+          question.imageFile
+        );
+        // Submit answer
+        await Promise.all(
+          question.answers.map(async (answer) => {
+            await postCreateNewAnswerForQuestion(
+              answer.description,
+              answer.isCorrect,
+              q.DT.id
+            );
+          })
+        );
+        console.log("check q", q);
+      })
+    );
   };
   const handlePreviewImage = (questionId) => {
     let questionClone = _.cloneDeep(questions);
@@ -156,6 +196,7 @@ const Questions = (props) => {
       setIsPreViewImage(true);
     }
   };
+  // console.log("check list quiz format", listQuiz);
 
   return (
     <div className="question-container">
@@ -167,7 +208,7 @@ const Questions = (props) => {
           <Select
             value={selectedQuiz}
             onChange={setSelectedQuiz}
-            options={options}
+            options={listQuiz}
           />
         </section>
         <div className="mt-3 mb-2">Add question:</div>

@@ -1,5 +1,9 @@
 .question-container {
     padding: 15px;
+    .css-1nmdiq5-menu {
+        z-index: 9999 !important;
+        position: relative;
+    }
     .title {
         margin-bottom: 15px;
         font-size: 20px;
