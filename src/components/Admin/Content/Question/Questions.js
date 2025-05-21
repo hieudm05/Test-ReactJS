@@ -7,6 +7,7 @@ import { AiOutlineMinusCircle } from "react-icons/ai";
 import { RiImageAddLine } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
 import "react-awesome-lightbox/build/style.css";
+import { toast } from "react-toastify";
 import {
   getAllQuizForAdmin,
   postCreateNewQuestionForQuiz,
@@ -17,7 +18,26 @@ import "./Questions.scss";
 import Lightbox from "react-awesome-lightbox";
 
 const Questions = (props) => {
+  const initQuestions = [
+    {
+      id: uuidv4(),
+      description: "",
+      imageFile: "",
+      imageName: "",
+      isValidQuestion: false,
+      answers: [
+        {
+          id: uuidv4(),
+          description: "",
+          isCorrect: false,
+          isValidAnswer: false,
+        },
+      ],
+    },
+  ];
+  const [questions, setQuestions] = useState(initQuestions);
   const [isPrevewImage, setIsPreViewImage] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [previewImage, setPreviewImage] = useState({
     title: "",
     url: "",
@@ -42,33 +62,12 @@ const Questions = (props) => {
       setListQuiz(newQuiz);
     }
   };
-  // const options = [
-  //   { value: "chocolate", label: "Chocolate" },
-  //   { value: "strawberry", label: "Strawberry" },
-  //   { value: "vanilla", label: "Vanilla" },
-  // ];
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
-  const [questions, setQuestions] = useState([
-    {
-      id: uuidv4(),
-      description: "",
-      imageFile: "",
-      imageName: "",
-      answers: [
-        {
-          id: uuidv4(),
-          description: "",
-          isCorrect: false,
-        },
-      ],
-    },
-  ]);
   const handleAddRemoveQuestion = (type, id) => {
     // console.log("check id", type, id);
     if (type === "ADD") {
       const newQuestion = {
         id: uuidv4(),
-        description: "questions 1",
+        description: "",
         imageFile: "",
         imageName: "",
         answers: [
@@ -161,29 +160,70 @@ const Questions = (props) => {
   const handleSubmitQuestionForQuiz = async () => {
     // Todo
     // Validate
-    // console.log("check question", questions, "___", selectedQuiz);
-    // postCreateNewQuestionForQuiz,postCreateNewAnswerForQuestion
-    // Submit question
-    await Promise.all(
-      questions.map(async (question) => {
-        const q = await postCreateNewQuestionForQuiz(
-          +selectedQuiz.value,
-          question.description,
-          question.imageFile
+    if (_.isEmpty(selectedQuiz)) {
+      toast.error("Please choose a quiz");
+      return;
+    }
+    // Validate answers and questions
+    let errors = [];
+    let questionClone = _.cloneDeep(questions);
+    for (let i = 0; i < questions.length; i++) {
+      for (let j = 0; j < questions[i].answers.length; j++) {
+        if (!questions[i].answers[j].description) {
+          errors.push((questionClone[i].answers[j].isValidAnswer = true));
+        } else {
+          questionClone[i].answers[j].isValidAnswer = false;
+        }
+      }
+    }
+    for (let i = 0; i < questionClone.length; i++) {
+      if (!questionClone[i].description) {
+        errors.push((questionClone[i].isValidQuestion = true));
+      } else {
+        questionClone[i].isValidQuestion = false;
+      }
+    }
+    if (errors.length > 0) {
+      setQuestions(questionClone);
+      return;
+    }
+    setQuestions(questionClone);
+
+    // Validate isCorrect
+    let isValidCorrect = 0;
+    for (let i = 0; i < questions.length; i++) {
+      for (let j = 0; j < questions[i].answers.length; j++) {
+        if (questions[i].answers[j].isCorrect) {
+          isValidCorrect++;
+          break;
+        }
+      }
+      if (isValidCorrect > 0) break;
+    }
+    if (isValidCorrect === 0) {
+      toast.error("Must select at least 1 correct answer");
+      return;
+    }
+    // console.log(isValidAnswer, "Q= ",indexQ, "A= ",indexA);
+    for (const question of questions) {
+      let q = await postCreateNewQuestionForQuiz(
+        +selectedQuiz.value,
+        question.description,
+        question.imageFile
+      );
+      // Submit quiz
+      for (const answer of question.answers) {
+        await postCreateNewAnswerForQuestion(
+          answer.description,
+          answer.isCorrect,
+          q.DT.id
         );
-        // Submit answer
-        await Promise.all(
-          question.answers.map(async (answer) => {
-            await postCreateNewAnswerForQuestion(
-              answer.description,
-              answer.isCorrect,
-              q.DT.id
-            );
-          })
-        );
-        console.log("check q", q);
-      })
-    );
+      }
+    }
+    toast.success("Create Question adn Answer Successed!");
+    // Tạo xong thì xoá form
+    setQuestions(initQuestions);
+    setSelectedQuiz(null);
   };
   const handlePreviewImage = (questionId) => {
     let questionClone = _.cloneDeep(questions);
@@ -196,7 +236,6 @@ const Questions = (props) => {
       setIsPreViewImage(true);
     }
   };
-  // console.log("check list quiz format", listQuiz);
 
   return (
     <div className="question-container">
@@ -220,7 +259,11 @@ const Questions = (props) => {
                 <div key={question.id} className="form-floating descripsion">
                   <input
                     type="text"
-                    className="form-control"
+                    className={
+                      question.isValidQuestion
+                        ? "form-control is-invalid"
+                        : "form-control"
+                    }
                     value={question.description}
                     placeholder="name@example.com"
                     onChange={(event) =>
@@ -296,7 +339,11 @@ const Questions = (props) => {
                     <div className="form-floating answer-name">
                       <input
                         type="text"
-                        className="form-control"
+                        className={
+                          answer.isValidAnswer === true
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
                         value={answer.description}
                         placeholder="name@example.com"
                         onChange={(event) =>
