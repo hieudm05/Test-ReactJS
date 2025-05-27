@@ -14,10 +14,10 @@ import {
   postCreateNewAnswerForQuestion,
 } from "../../../../services/apiServices";
 import _ from "lodash";
-import "./Questions.scss";
+import "./QuizQA.scss";
 import Lightbox from "react-awesome-lightbox";
 
-const Questions = (props) => {
+const QuizQA = (props) => {
   const initQuestions = [
     {
       id: uuidv4(),
@@ -37,11 +37,11 @@ const Questions = (props) => {
   ];
   const [questions, setQuestions] = useState(initQuestions);
   const [isPrevewImage, setIsPreViewImage] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [previewImage, setPreviewImage] = useState({
     title: "",
     url: "",
   });
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [listQuiz, setListQuiz] = useState([]);
   useEffect(() => {
     fetchQuiz();
@@ -239,8 +239,6 @@ const Questions = (props) => {
 
   return (
     <div className="question-container">
-      <div className="title">Manage Question</div>
-      <hr />
       <div className="add-new-question">
         <section className="col-6 form-group">
           <label className="mb-2">Select Quiz: </label>
@@ -406,4 +404,4 @@ const Questions = (props) => {
     </div>
   );
 };
-export default Questions;
+export default QuizQA;
