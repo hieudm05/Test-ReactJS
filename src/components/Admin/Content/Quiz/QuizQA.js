@@ -10,9 +10,8 @@ import "react-awesome-lightbox/build/style.css";
 import { toast } from "react-toastify";
 import {
   getAllQuizForAdmin,
-  postCreateNewQuestionForQuiz,
-  postCreateNewAnswerForQuestion,
   getQuizWithQA,
+  postUpsertQA,
 } from "../../../../services/apiServices";
 import _ from "lodash";
 import "./QuizQA.scss";
@@ -246,27 +245,27 @@ const QuizQA = (props) => {
       toast.error("Must select at least 1 correct answer");
       return;
     }
-    // console.log(isValidAnswer, "Q= ",indexQ, "A= ",indexA);
-    for (const question of questions) {
-      let q = await postCreateNewQuestionForQuiz(
-        +selectedQuiz.value,
-        question.description,
-        question.imageFile
-      );
-      // Submit quiz
-      for (const answer of question.answers) {
-        await postCreateNewAnswerForQuestion(
-          answer.description,
-          answer.isCorrect,
-          q.DT.id
-        );
+    let questionClone2 = _.cloneDeep(questions);
+    for (let i = 0; i < questionClone2.length; i++) {
+      if(questionClone2[i].imageFile){
+        questionClone2[i].imageFile = await toBase64(questionClone2[i].imageFile)
       }
     }
+     await postUpsertQA({
+      quizId: selectedQuiz.value,
+      questions: questionClone2,
+    });
     toast.success("Create Question adn Answer Successed!");
     // Tạo xong thì xoá form
     setQuestions(initQuestions);
     setSelectedQuiz(null);
   };
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+  });
   const handlePreviewImage = (questionId) => {
     let questionClone = _.cloneDeep(questions);
     let index = questionClone.findIndex((item) => item.id === questionId);

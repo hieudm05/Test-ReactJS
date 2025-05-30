@@ -138,8 +138,6 @@ const MagageQuiz = (props) => {
           handleClickDeleteQuiz={handleClickDeleteQuiz}
         />
       </div>
-
-            
           </Accordion.Body>
         </Accordion.Item>
          <Accordion.Item eventKey="1">
