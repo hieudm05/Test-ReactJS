@@ -1,7 +1,7 @@
 import Select from "react-select";
 import { useState, useEffect } from "react";
-import { getAllQuizForAdmin, getAllUser } from "../../../../services/apiServices";
-
+import { getAllQuizForAdmin, getAllUser,postAssignQuiz,  } from "../../../../services/apiServices";
+import { toast } from "react-toastify";
 const AssignQuiz = () => {
   const [isPrevewImage, setIsPreViewImage] = useState(false);
   const [previewImage, setPreviewImage] = useState({
@@ -43,6 +43,17 @@ const AssignQuiz = () => {
       setListUser(newUsers);
     }
   };
+  const handleAssign = async () =>{
+    const res = await postAssignQuiz(+selectedQuiz.value, +selectedUser.value)
+    if(res && res.EC === 0){
+      toast.success(res.EM);
+      
+    }else{
+      toast.error(res.EM);
+    }
+    
+    
+  }
   return (
     <div className="assign-quiz-container row">
       <section className="col-6 form-group">
@@ -61,7 +72,7 @@ const AssignQuiz = () => {
           options={listUser}
         />
       </section>
-      <div className="btn btn-warning mt-3">Assign</div>
+      <div className="btn btn-warning mt-3" onClick={() => handleAssign()}>Assign</div>
     </div>
   );
 };

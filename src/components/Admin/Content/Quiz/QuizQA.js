@@ -12,6 +12,7 @@ import {
   getAllQuizForAdmin,
   postCreateNewQuestionForQuiz,
   postCreateNewAnswerForQuestion,
+  getQuizWithQA,
 } from "../../../../services/apiServices";
 import _ from "lodash";
 import "./QuizQA.scss";
@@ -37,7 +38,7 @@ const QuizQA = (props) => {
   ];
   const [questions, setQuestions] = useState(initQuestions);
   const [isPrevewImage, setIsPreViewImage] = useState(false);
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [selectedQuiz, setSelectedQuiz] = useState({});
   const [previewImage, setPreviewImage] = useState({
     title: "",
     url: "",
@@ -51,6 +52,47 @@ const QuizQA = (props) => {
       }
     };
   }, [isPrevewImage]);
+
+  useEffect(() => {
+    if (selectedQuiz && selectedQuiz.value) {
+      fetchQuizWithQA();
+    }
+  }, [selectedQuiz]);
+      // return a promise that resolves with a File instance
+    function urltoFile(url, filename, mimeType) {
+      if (url.startsWith("data:")) {
+        var arr = url.split(","),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[arr.length - 1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        var file = new File([u8arr], filename, { type: mime || mimeType });
+        return Promise.resolve(file);
+      }
+      return fetch(url)
+        .then((res) => res.arrayBuffer())
+        .then((buf) => new File([buf], filename, { type: mimeType }));
+    }
+  const fetchQuizWithQA = async () => {
+    const res = await getQuizWithQA(selectedQuiz.value);
+    // console.log("check res", res);
+      if (res && res.EC === 0) {
+      // Convert base64 to File object
+      let newQA = [];
+      for (let i = 0; i < res.DT.qa.length; i++) {
+        let q = res.DT.qa[i];
+        if(res.DT.qa[i].imageFile){
+          q.imageName = `Question-${q.id}`
+          q.imageFile = await urltoFile(`data:image/png;base64,${q.imageFile}`, `Question-${q.id}`,'image/png')
+        }
+        newQA.push(q);
+      }
+      setQuestions(res.DT.qa);
+    }
+  };
   const fetchQuiz = async () => {
     let res = await getAllQuizForAdmin();
     // console.log("res all quiz", res);

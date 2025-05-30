@@ -112,7 +112,6 @@ const DetailQuiz = (props) => {
         payload.answers = answersArr;
         // Submit api
         let res = await postSubmitQuiz(payload)
-        console.log('check res: ',res);
         if(res && res.EC ===0){
           setDataModalResult({
             countCorrect: res.DT.countCorrect,
@@ -122,12 +121,8 @@ const DetailQuiz = (props) => {
           setIsShowModalResult(true)
         }else{
           alert("lỗi");
-        }
-        
-        console.log("final payload", payload);
-        
+        } 
       }
-      
     }
   return (
     <div className="detail-quiz-container">

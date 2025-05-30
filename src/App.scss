@@ -29,6 +29,9 @@ body {
     gap: 30px;
   }
  }
+ .app-content{
+  height: calc(100vh - 72px);
+ }
 }
 video{
   position: fixed;
