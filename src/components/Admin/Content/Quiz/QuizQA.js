@@ -251,14 +251,14 @@ const QuizQA = (props) => {
         questionClone2[i].imageFile = await toBase64(questionClone2[i].imageFile)
       }
     }
-     await postUpsertQA({
+      const res = await postUpsertQA({
       quizId: selectedQuiz.value,
       questions: questionClone2,
     });
-    toast.success("Create Question adn Answer Successed!");
-    // Tạo xong thì xoá form
-    setQuestions(initQuestions);
-    setSelectedQuiz(null);
+    if(res && res.EC === 0){
+      toast.success(res.EM);
+      fetchQuizWithQA();
+    }
   };
     const toBase64 = file => new Promise((resolve, reject) => {
       const reader = new FileReader();
