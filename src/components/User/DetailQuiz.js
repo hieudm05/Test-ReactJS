@@ -133,7 +133,7 @@ const DetailQuiz = (props) => {
         </div>
         <hr></hr>
         <div className="q-body">
-          <img src="" />
+          {/* <img src="" alt="Quiz" /> */}
         </div>
         <div className="q-content">
           <Question
@@ -149,7 +149,7 @@ const DetailQuiz = (props) => {
         </div>
       </section>
       <section className="right-content">
-        <RightContent dataQuiz={dataQuiz}/>
+        <RightContent dataQuiz={dataQuiz} handleFinishQuiz={handleFinishQuiz}/>
       </section>
       <ModalResult 
       show = {isShowModalResult}
