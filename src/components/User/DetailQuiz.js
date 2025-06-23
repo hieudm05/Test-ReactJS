@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, data } from "react-router-dom";
-import { getDataQuiz,postSubmitQuiz } from "../../services/apiServices";
+import { getDataQuiz, postSubmitQuiz } from "../../services/apiServices";
 import _ from "lodash";
 import "./DetailQuiz.scss";
 import Question from "./Question";
@@ -12,8 +12,8 @@ const DetailQuiz = (props) => {
   const [dataQuiz, setDataQuiz] = useState([]);
   // Kiểm soát phân trang
   const [index, setIndex] = useState(0);
-  const [isShowModalResult, setIsShowModalResult] = useState(false)
-  const [dataModalResult, setDataModalResult ] = useState({})
+  const [isShowModalResult, setIsShowModalResult] = useState(false);
+  const [dataModalResult, setDataModalResult] = useState({});
   const quizId = params.id;
   useEffect(() => {
     fetchQuestions();
@@ -21,7 +21,7 @@ const DetailQuiz = (props) => {
 
   const fetchQuestions = async () => {
     const res = await getDataQuiz(quizId);
-    
+
     if (res && res.EC === 0) {
       let raw = res.DT;
       //   console.log(raw);
@@ -53,78 +53,81 @@ const DetailQuiz = (props) => {
         })
         .value();
       setDataQuiz(data);
-          // console.log('data ',data);
+      // console.log('data ',data);
     }
   };
-  
+
   const handlePrev = () => {
-    if(index - 1 < 0) return
-    
+    if (index - 1 < 0) return;
+
     setIndex(index - 1);
-  }
-  const handleNext = () =>{
-    if(dataQuiz && dataQuiz.length > index + 1)
-    setIndex(index + 1)
-  }
-    // console.log('check data quizz', dataQuiz);
-  const handleCheckBox = (answerId, questionId) =>{
+  };
+  const handleNext = () => {
+    if (dataQuiz && dataQuiz.length > index + 1) setIndex(index + 1);
+  };
+  // console.log('check data quizz', dataQuiz);
+  const handleCheckBox = (answerId, questionId) => {
     let dataQuizClone = _.cloneDeep(dataQuiz);
-    let question = dataQuizClone.find(item => +item.questionId === questionId);
-    if(question && question.answers ){
-        let b = question.answers.map(item => {
-          if(+item.id === +answerId){
-            item.isSelected = !item.isSelected;
-          }
-          return item
-        })
+    let question = dataQuizClone.find(
+      (item) => +item.questionId === questionId
+    );
+    if (question && question.answers) {
+      let b = question.answers.map((item) => {
+        if (+item.id === +answerId) {
+          item.isSelected = !item.isSelected;
+        }
+        return item;
+      });
       // console.log(question);
       // Gán đè lại dữ liệu mới về question
-      question.answers = b
+      question.answers = b;
     }
-    let index = dataQuizClone.findIndex(item => +item.questionId === +questionId )
-    if(index > -1){
+    let index = dataQuizClone.findIndex(
+      (item) => +item.questionId === +questionId
+    );
+    if (index > -1) {
       // Cập nhật vị trí thay đổi
       dataQuizClone[index] = question;
       setDataQuiz(dataQuizClone);
     }
-  }
-    const handleFinishQuiz = async () =>{
-      let payload = {
-        quizId: +quizId,
-        answers: []
-      };
-      let answersArr = []
-      if(dataQuiz && dataQuiz.length > 0){
-        dataQuiz.forEach(question => {
-          // console.log("check item", item);
-          let questionId = question.questionId;
-          let userAnswerId = [];
-          //todo : userAnswerId
-          question.answers.forEach(aws => {
-            if(aws.isSelected){
-              userAnswerId.push(aws.id)
-            }
-          })
-          answersArr.push({
-            questionId: +questionId,
-            userAnswerId: userAnswerId
-          })
-        })
-        payload.answers = answersArr;
-        // Submit api
-        let res = await postSubmitQuiz(payload)
-        if(res && res.EC ===0){
-          setDataModalResult({
-            countCorrect: res.DT.countCorrect,
-            countTotal: res.DT.countTotal,
-            quizData: res.DT.quizData
-          })
-          setIsShowModalResult(true)
-        }else{
-          alert("lỗi");
-        } 
+  };
+  const handleFinishQuiz = async () => {
+    let payload = {
+      quizId: +quizId,
+      answers: [],
+    };
+    let answersArr = [];
+    if (dataQuiz && dataQuiz.length > 0) {
+      dataQuiz.forEach((question) => {
+        // console.log("check item", item);
+        let questionId = question.questionId;
+        let userAnswerId = [];
+        //todo : userAnswerId
+        question.answers.forEach((aws) => {
+          if (aws.isSelected) {
+            userAnswerId.push(aws.id);
+          }
+        });
+        answersArr.push({
+          questionId: +questionId,
+          userAnswerId: userAnswerId,
+        });
+      });
+      payload.answers = answersArr;
+      // Submit api
+      let res = await postSubmitQuiz(payload);
+      if (res && res.EC === 0) {
+        setDataModalResult({
+          countCorrect: res.DT.countCorrect,
+          countTotal: res.DT.countTotal,
+          quizData: res.DT.quizData,
+        });
+        setIsShowModalResult(true);
+      } else {
+        alert("lỗi");
       }
     }
+  };
   return (
     <div className="detail-quiz-container">
       <section className="left-content">
@@ -132,29 +135,36 @@ const DetailQuiz = (props) => {
           Quiz-{quizId}: {location?.state?.quizTitle}
         </div>
         <hr></hr>
-        <div className="q-body">
-          {/* <img src="" alt="Quiz" /> */}
-        </div>
+        <div className="q-body">{/* <img src="" alt="Quiz" /> */}</div>
         <div className="q-content">
           <Question
             index={index}
-            handleCheckBox = {handleCheckBox}
+            handleCheckBox={handleCheckBox}
             data={dataQuiz && dataQuiz.length > 0 ? dataQuiz[index] : []}
           />
         </div>
         <div className="footer">
-          <button className="btn btn-secondary" onClick={() => handlePrev()}>Preview</button>
-          <button className="btn btn-primary" onClick={() => handleNext()}>Next</button>
-          <button className="btn btn-warning" onClick={() => handleFinishQuiz()}>Finish</button>
+          <button className="btn btn-secondary" onClick={() => handlePrev()}>
+            Preview
+          </button>
+          <button className="btn btn-primary" onClick={() => handleNext()}>
+            Next
+          </button>
+          <button
+            className="btn btn-warning"
+            onClick={() => handleFinishQuiz()}
+          >
+            Finish
+          </button>
         </div>
       </section>
       <section className="right-content">
-        <RightContent dataQuiz={dataQuiz} handleFinishQuiz={handleFinishQuiz}/>
+        <RightContent dataQuiz={dataQuiz} handleFinishQuiz={handleFinishQuiz} setIndex={setIndex} />
       </section>
-      <ModalResult 
-      show = {isShowModalResult}
-      setShow = {setIsShowModalResult}
-      dataModalResult={dataModalResult}
+      <ModalResult
+        show={isShowModalResult}
+        setShow={setIsShowModalResult}
+        dataModalResult={dataModalResult}
       />
     </div>
   );
