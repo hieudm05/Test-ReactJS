@@ -3,11 +3,12 @@ import SideBar from "./SideBar";
 import { FaBars } from "react-icons/fa";
 import "./Admin.scss";
 import { Outlet } from "react-router-dom";
-import { ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PerfectScrollbar from 'react-perfect-scrollbar'
-
+import PerfectScrollbar from "react-perfect-scrollbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Language from "../Header/Language";
 
 const Admin = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -19,17 +20,31 @@ const Admin = (props) => {
         </section>
         <section className="admin-content">
           <div className="admin-header">
-            <FaBars
-              className="admin-icon"
+            <span
               onClick={() => {
                 setCollapsed(!collapsed);
               }}
-            />
+            >
+              {" "}
+              <FaBars className="leftside" />
+            </span>
+            <div className="admin-header-right">
+              <span>
+                <NavDropdown title="Settings" id="basic-nav-dropdown">
+                <NavDropdown.Item>Logim</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">Profile</NavDropdown.Item>
+                <NavDropdown.Item>Log out</NavDropdown.Item>
+              </NavDropdown>
+              </span>
+              <span>
+              <Language />
+              </span>
+            </div>
           </div>
           <section className="admin-main">
-          <PerfectScrollbar>
-            <Outlet />
-          </PerfectScrollbar>
+            <PerfectScrollbar>
+              <Outlet />
+            </PerfectScrollbar>
           </section>
         </section>
       </section>

@@ -45,6 +45,7 @@ const DetailQuiz = (props) => {
             answers.push(item.answers);
             // console.log("item", item);
           });
+          answers = _.orderBy(answers, ["id"], ["asc"]);
           return {
             questionId: key,
             answers: answers,
