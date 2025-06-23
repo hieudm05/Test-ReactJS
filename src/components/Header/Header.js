@@ -3,28 +3,16 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../services/apiServices";
+import { toast } from "react-toastify";
+import { doLogout } from "../../redux/action/userAction";
 
-// import React, { useState } from 'react'
-// import {
-//   CCollapse,
-//   CContainer,
-//   CDropdown,
-//   CDropdownDivider,
-//   CDropdownItem,
-//   CDropdownMenu,
-//   CDropdownToggle,
-//   CNavbar,
-//   CNavbarBrand,
-//   CNavbarNav,
-//   CNavbarToggler,
-//   CNavItem,
-//   CNavLink,
-// } from '@coreui/react'
 
 const Header = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const account = useSelector((state) => state.user.account);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogin = () => {
     navigate("/login");
@@ -32,6 +20,16 @@ const Header = () => {
   const handleRegister = () => {
     navigate("/register");
   };
+  const handleLogOut = async () => {
+    const res = await logout(account.email, account.refresh_token);
+    if(res && res.EC === 0) {
+      // Clear user data in redux
+      dispatch(doLogout())
+      navigate("/login");
+    }else{
+      toast.error(res.EM);
+    }
+  }
   return (
     <Navbar expand="lg" className="bg-body-tertiary z-2 pt-4">
       <Container>
@@ -73,8 +71,8 @@ const Header = () => {
             ) : (
               <NavDropdown title="Settings" id="basic-nav-dropdown">
                 <NavDropdown.Item>Logim</NavDropdown.Item>
-                <NavDropdown.Item>Logout</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">Profile</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => handleLogOut()}>Log out</NavDropdown.Item>
               </NavDropdown>
             )}
           </Nav>

@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { doLogin } from "../../redux/action/userAction";
 import { ImSpinner10 } from "react-icons/im";
 
-
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,9 +20,7 @@ const Login = (props) => {
     let data = await postLogin(email, password);
     if (data && data.EC === 0) {
       //Login success
-      dispatch(
-        doLogin(data)
-      )
+      dispatch(doLogin(data));
       toast.success(data.EM);
       setLoading(false);
       navigate("/");
@@ -34,6 +31,11 @@ const Login = (props) => {
       setLoading(false);
     }
   };
+  const handleKeyDown = (event) => {
+   if(event && event.key === "Enter"){
+      handleLogin();
+   }
+  }
   return (
     <section className="login-container">
       <section className="header">
@@ -63,15 +65,18 @@ const Login = (props) => {
             placeholder="Enter password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            onKeyDown={(event) => handleKeyDown(event)}
           />
         </div>
         <span className="forgot-password">Forgot password?</span>
         <div>
-          <button className="btn-submit" onClick={() => handleLogin()} disabled = {loading}>
+          <button
+            className="btn-submit"
+            onClick={() => handleLogin()}
+            disabled={loading}
+          >
             Login
-            {loading === true &&
-               <ImSpinner10 className="loaderIcon" />
-            }
+            {loading === true && <ImSpinner10 className="loaderIcon" />}
           </button>
         </div>
         <div className="text-center">
@@ -84,4 +89,3 @@ const Login = (props) => {
   );
 };
 export default Login;
-
