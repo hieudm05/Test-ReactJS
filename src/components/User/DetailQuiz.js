@@ -10,6 +10,7 @@ const DetailQuiz = (props) => {
   const params = useParams();
   const location = useLocation();
   const [dataQuiz, setDataQuiz] = useState([]);
+  const [isTimeUp, setIsTimeUp] = useState(false);
   // Kiểm soát phân trang
   const [index, setIndex] = useState(0);
   const [isShowModalResult, setIsShowModalResult] = useState(false);
@@ -140,6 +141,7 @@ const DetailQuiz = (props) => {
           <Question
             index={index}
             handleCheckBox={handleCheckBox}
+            isTimeUp={isTimeUp}
             data={dataQuiz && dataQuiz.length > 0 ? dataQuiz[index] : []}
           />
         </div>
@@ -153,6 +155,7 @@ const DetailQuiz = (props) => {
           <button
             className="btn btn-warning"
             onClick={() => handleFinishQuiz()}
+            disabled={dataQuiz.length === 0 || isTimeUp}
           >
             Finish
           </button>
@@ -165,6 +168,7 @@ const DetailQuiz = (props) => {
         show={isShowModalResult}
         setShow={setIsShowModalResult}
         dataModalResult={dataModalResult}
+        setIsTimeUp={setIsTimeUp}
       />
     </div>
   );

@@ -5,9 +5,13 @@ import Modal from "react-bootstrap/Modal";
 
 
 const ModalResult = (props) => {
-  const { show, setShow, dataModalResult } = props;
+  const { show, setShow, dataModalResult, setIsTimeUp } = props;
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setIsTimeUp(true);
+
+  }
   // console.log('check data', dataModalResult);
   
   return (

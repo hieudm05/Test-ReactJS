@@ -9,6 +9,8 @@ import "nprogress/nprogress.css";
 import Layout from "./Layout";
 import { PersistGate } from "redux-persist/integration/react";
 import "react-perfect-scrollbar/dist/css/styles.css";
+import i18n from "./services/i18n";
+
 
 // import './index.css';
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Lightbox from "react-awesome-lightbox";
 import "react-awesome-lightbox/build/style.css";
 const Question = (props) => {
-  const { data, index } = props;
+  const { data, index, isTimeUp } = props;
   const [isPreViewImage, setIsPreViewImage] = useState(false);
   if (_.isEmpty(data)) {
     return <></>;
@@ -45,6 +45,7 @@ const Question = (props) => {
                   className="form-check-input"
                   type="checkbox"
                   id="flexCheckDefault"
+                  disabled={isTimeUp}
                   // selected = {props.isSelected}
                   checked={a.isSelected}
                   onChange={(event) =>
