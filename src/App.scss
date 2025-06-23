@@ -33,6 +33,11 @@ body {
   height: calc(100vh - 72px);
  }
 }
+.languages{
+  .dropdown-toggle::after{
+    display: none !important;
+  }
+}
 video{
   position: fixed;
   bottom: 0;

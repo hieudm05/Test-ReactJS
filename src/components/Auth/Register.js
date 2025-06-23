@@ -5,6 +5,7 @@ import "./Register.scss";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { postRegister } from "../../services/apiServices";
+import Language from "../Header/Language";
 const Register = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +47,9 @@ const Register = () => {
         <span className="">Already have an account?</span>
         <span className="sign-up">
           <button onClick={() => navigate("/login")}>Login</button>
+        </span>
+        <span>
+          <Language />
         </span>
       </section>
       <section className="title col-4 mx-auto"> Minh Hieu</section>
