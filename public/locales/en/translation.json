@@ -1,0 +1,10 @@
+ {
+          "homepage": {
+            "title1": "Lorem ipsum dolor sit amet.",
+            "title2":
+              "Consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+              "title3":{
+                "login": "Doing Quiz Now"
+              }
+          }
+        }

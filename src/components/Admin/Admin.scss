@@ -2,17 +2,32 @@
     display: flex;
     .admin-sidebar{
         .pro-sidebar{
-            height: 100vh !important;
+            // height: 100vh !important;
         }  
     }
     .admin-content{
         width: 100%;
         .admin-header{
-            height: 40px;
-            border: 1px solid green;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px 0 10px;
+            align-items: center;
+            height: 60px;
+            border: 1px solid #ccc;
+            .leftside{
+                font-size: 20px;
+                color: #666666;
+                cursor: pointer;
+            }
+            .admin-header-right{
+                display: flex;
+                align-items: center;
+                flex-direction: row-reverse;
+                gap: 10px;
+            }
         }
         .admin-main{
-            border: 1px solid red;
+            height: calc(100vh - 40px);
         }
     }
 }

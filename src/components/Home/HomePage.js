@@ -1,15 +1,29 @@
+import { useNavigate } from 'react-router-dom';
 import videoHome from '../../assets/video/video-homepage.mp4';
+import { useSelector } from 'react-redux';
+import { useTranslation, Trans } from 'react-i18next';
 const HomePage = (props) => {
+  const isAuthenticated = useSelector(state => state.user.isAuthenticated)
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <div className="homepage-container">
      <video autoPlay loop muted className="video-homepage">
       <source src={videoHome} type="video/mp4"/>
      </video>
      <div className='homepage-content'>
-        <div className='fs-1'>Lorem ipsum dolor sit amet.</div>
-        <div className='fs-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ipsa ipsum repudiandae commodi consequuntur aspernatur quae voluptate nam impedit. Dolor iure ut quaerat voluptatum consequatur quas sint aut perspiciatis dolorem?</div>
+        <div className='fs-1'>
+           {t('homepage.title1')}
+        </div>
+        <div className='fs-5'>{t('homepage.title2')}</div>
         <div>
-          <button className='btn btn-dark'>Get's started. It's free</button>
+          {
+            isAuthenticated === false ?
+            <button className='btn btn-dark' onClick={ () => navigate('/login')}>Get's started. It's free</button>
+             :
+             <button className='btn btn-dark' onClick={() => navigate('/users')}>{t('homepage.title3.login')}</button>
+          }
+        
         </div>
      </div>
     </div>

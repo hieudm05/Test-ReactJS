@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
 import { toast } from "react-toastify";
-import { postCreateNewUser } from "../../../services/apiServices";
+import { putUpdateUser } from "../../../services/apiServices";
+import _ from "lodash";
 
-function ModalCreateUser(props) {
-  const { show, setShow } = props;
+function ModalUpdateUser(props) {
+  const { show, setShow, dataUpdate } = props;
 
   const handleClose = () => {
     setShow(false);
@@ -16,6 +17,7 @@ function ModalCreateUser(props) {
     setRole("USER");
     setImage("");
     setPreviewImage("");
+    props.resetUpdateUser();
   };
   // const handleShow = () => setShow(true);
 
@@ -25,6 +27,18 @@ function ModalCreateUser(props) {
   const [role, setRole] = useState("USER");
   const [image, setImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
+
+  useEffect(() => {
+    if(!_.isEmpty(dataUpdate)){
+        setEmail(dataUpdate.email);
+        setUsername(dataUpdate.username);
+        setRole(dataUpdate.role);
+        setImage("");
+        if(dataUpdate.image){
+          setPreviewImage(`data:image/jpeg;base64,${dataUpdate.image}`);
+        }
+    }
+  },[dataUpdate]);
 
   const handleUploadImage = (event) => {
     if (event.target && event.target.files && event.target.files[0]) {
@@ -51,14 +65,9 @@ function ModalCreateUser(props) {
       toast.error("Email is invalid");
       return;
     }
-    if (!password) {
-      toast.error("Password is required");
-      return;
-    }
 
-    const data = await postCreateNewUser(
-      email,
-      password,
+    const data = await putUpdateUser(
+      dataUpdate.id,
       username,
       role,
       image
@@ -68,15 +77,20 @@ function ModalCreateUser(props) {
     if (data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
-      // Sau khi đóng modal thì gọi lại hàm fetchListUser để cập nhật lại danh sách người dùng
-      props.setCurrentPage(1);
-      await props.fetchListUserWithPaginate(1);
+      // Sau khi đóng modal thì gọi lại hàm fetchListUserWithPaginate để cập nhật lại danh sách người dùng
+      // props.setCurrentPage(1);
+      //Trong các trường hợp trên sau khi xử lí dữ liệu sẽ load về trang 1, 
+      //Còn update thì nó không cần thiết, nó sẽ load về trang hiện tại mà nó được sửa
+      
+      await props.fetchListUserWithPaginate(props.curentPage);
+      // console.log("props.currentPage", props.curentPage);
     }
     // Tạo thất bại
     if (data && data.EC !== 0) {
       toast.error(data.EM);
     }
   };
+  
   return (
     <>
       {/* <Button variant="primary" onClick={handleShow}>
@@ -90,7 +104,7 @@ function ModalCreateUser(props) {
         className="modal-add-user"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add new user</Modal.Title>
+          <Modal.Title>Update a user</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form className="row g-3">
@@ -100,6 +114,7 @@ function ModalCreateUser(props) {
                 type="email"
                 className="form-control"
                 value={email}
+                disabled={true}
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
@@ -109,6 +124,7 @@ function ModalCreateUser(props) {
                 type="password"
                 className="form-control"
                 value={password}
+                disabled={true}
                 onChange={(event) => setPassword(event.target.value)}
               />
             </div>
@@ -144,7 +160,6 @@ function ModalCreateUser(props) {
                 onChange={(event) => handleUploadImage(event)}
               />
             </div>
-
             <div className="col-md-12 img-preview">
               {previewImage ? (
                 <img src={previewImage} alt="preview" />
@@ -167,4 +182,4 @@ function ModalCreateUser(props) {
   );
 }
 
-export default ModalCreateUser;
+export default ModalUpdateUser;
